@@ -1,0 +1,66 @@
+mod controllers;
+mod db;
+
+use clap::{Parser, Subcommand};
+
+use controllers::bills;
+use controllers::issuers;
+
+#[derive(Parser)]
+struct Args {
+    #[command(subcommand)]
+    command: Command,
+}
+
+#[derive(Subcommand)]
+enum Command {
+    Add {
+        #[command(subcommand)]
+        entity: Entity,
+    },
+    Ls {
+        #[command(subcommand)]
+        entity: Entity,
+    },
+    Patch {
+        #[command(subcommand)]
+        entity: Entity,
+    },
+    Rm {
+        #[command(subcommand)]
+        entity: Entity,
+    },
+}
+
+#[derive(Subcommand)]
+enum Entity {
+    Bill,
+    Issuer,
+}
+
+fn main() {
+    let args = Args::parse();
+    let connection = db::get_connection("db.sqlite");
+
+    // db::drop_tables(&connection);
+    // db::create_tables(&connection);
+
+    match args.command {
+        Command::Add { entity } => match entity {
+            Entity::Bill => bills::add(&connection),
+            Entity::Issuer => issuers::add(&connection),
+        },
+        Command::Ls { entity } => match entity {
+            Entity::Bill => bills::ls(&connection),
+            Entity::Issuer => issuers::ls(&connection),
+        },
+        Command::Patch { entity } => match entity {
+            Entity::Bill => bills::patch(&connection),
+            Entity::Issuer => issuers::patch(&connection),
+        },
+        Command::Rm { entity } => match entity {
+            Entity::Bill => bills::rm(&connection),
+            Entity::Issuer => issuers::rm(&connection),
+        },
+    }
+}
