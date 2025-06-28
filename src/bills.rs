@@ -14,7 +14,7 @@ impl Display for IssuerOption {
     }
 }
 
-pub fn add(connection: &Connection) {
+pub fn add(connection: Connection) {
     let rows = connection
         .prepare("SELECT * FROM issuer")
         .unwrap()
@@ -51,9 +51,11 @@ pub fn add(connection: &Connection) {
     statement.next().unwrap();
 }
 
-pub fn ls(connection: &Connection) {
+pub fn ls(connection: Connection) {
     let bills = connection
-        .prepare("SELECT * FROM bill JOIN issuer ON bill.issuer_id = issuer.id")
+        .prepare(
+            "SELECT * FROM bill JOIN issuer ON bill.issuer_id = issuer.id ORDER BY issue_date DESC",
+        )
         .unwrap()
         .into_iter()
         .map(|row| row.unwrap());
@@ -63,10 +65,10 @@ pub fn ls(connection: &Connection) {
         let issue_date = bill.read::<&str, _>("issue_date");
         let due_date = bill.read::<&str, _>("due_date");
         let amount = bill.read::<i64, _>("amount") as f64 / 100.0;
-        println!("{name}, {issue_date}, {due_date}, {amount}");
+        println!("{name:<25} {issue_date} {due_date} ${amount:.2}");
     }
 }
 
-pub fn patch(connection: &Connection) {}
+pub fn patch(connection: Connection) {}
 
-pub fn rm(connection: &Connection) {}
+pub fn rm(connection: Connection) {}

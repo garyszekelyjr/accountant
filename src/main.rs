@@ -1,11 +1,9 @@
-mod controllers;
+mod bills;
 mod db;
+mod issuers;
 mod utils;
 
 use clap::{Parser, Subcommand};
-
-use controllers::bills;
-use controllers::issuers;
 
 #[derive(Parser)]
 struct Args {
@@ -32,6 +30,7 @@ enum Command {
         entity: Entity,
     },
     SplitBill,
+    StatementToBill,
 }
 
 #[derive(Subcommand)]
@@ -49,21 +48,22 @@ fn main() {
 
     match args.command {
         Command::Add { entity } => match entity {
-            Entity::Bill => bills::add(&connection),
-            Entity::Issuer => issuers::add(&connection),
+            Entity::Bill => bills::add(connection),
+            Entity::Issuer => issuers::add(connection),
         },
         Command::Ls { entity } => match entity {
-            Entity::Bill => bills::ls(&connection),
-            Entity::Issuer => issuers::ls(&connection),
+            Entity::Bill => bills::ls(connection),
+            Entity::Issuer => issuers::ls(connection),
         },
         Command::Patch { entity } => match entity {
-            Entity::Bill => bills::patch(&connection),
-            Entity::Issuer => issuers::patch(&connection),
+            Entity::Bill => bills::patch(connection),
+            Entity::Issuer => issuers::patch(connection),
         },
         Command::Rm { entity } => match entity {
-            Entity::Bill => bills::rm(&connection),
-            Entity::Issuer => issuers::rm(&connection),
+            Entity::Bill => bills::rm(connection),
+            Entity::Issuer => issuers::rm(connection),
         },
         Command::SplitBill => utils::split_bill(connection),
+        Command::StatementToBill => utils::statement_to_bill(connection),
     }
 }

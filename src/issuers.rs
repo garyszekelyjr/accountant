@@ -1,7 +1,7 @@
 use inquire::Text;
 use sqlite::Connection;
 
-pub fn add(connection: &Connection) {
+pub fn add(connection: Connection) {
     let name = Text::new("Issuer's Name:").prompt().unwrap();
     let mut statement = connection
         .prepare("INSERT INTO issuer (name) VALUES (?)")
@@ -10,7 +10,7 @@ pub fn add(connection: &Connection) {
     statement.next().unwrap();
 }
 
-pub fn ls(connection: &Connection) {
+pub fn ls(connection: Connection) {
     let rows = connection
         .prepare("SELECT * FROM issuer")
         .unwrap()
@@ -23,6 +23,6 @@ pub fn ls(connection: &Connection) {
     }
 }
 
-pub fn patch(connection: &Connection) {}
+pub fn patch(connection: Connection) {}
 
-pub fn rm(connection: &Connection) {}
+pub fn rm(connection: Connection) {}

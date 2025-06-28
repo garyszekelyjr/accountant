@@ -47,9 +47,8 @@ def download(page: Page):
     download.save_as(TRANSACTIONS / f"{statement.strftime('%Y-%m-%d')}.csv")
 
 
-def scrape():
-    with sync_playwright() as playwright:
-        with playwright.chromium.launch(headless=False) as browser:
-            with browser.new_page() as page:
-                login(page)
-                download(page)
+with sync_playwright() as playwright:
+    with playwright.chromium.launch(headless=False) as browser:
+        with browser.new_page() as page:
+            login(page)
+            download(page)
