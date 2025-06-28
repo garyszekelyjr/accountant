@@ -1,2 +1,11 @@
-/target
+target/
+__pycache__/
+statements/
+transactions/
+.venv/
+
+.env
+.DS_Store
+
 *.sqlite
+*.egg-info/

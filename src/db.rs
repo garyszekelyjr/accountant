@@ -1,8 +1,7 @@
 use sqlite::Connection;
 
-const TABLES: [&str; 2] = ["issuers", "bills"];
-
 pub fn drop_tables(connection: &Connection) {
+    const TABLES: [&str; 2] = ["issuer", "bill"];
     for table in TABLES {
         connection
             .execute(format!("DROP TABLE IF EXISTS {table}"))
@@ -13,9 +12,21 @@ pub fn drop_tables(connection: &Connection) {
 pub fn create_tables(connection: &Connection) {
     connection
         .execute(format!(
-            "CREATE TABLE issuers (
+            "CREATE TABLE IF NOT EXISTS issuer (
                 id INTEGER PRIMARY KEY,
                 name TEXT UNIQUE
+            )"
+        ))
+        .unwrap();
+
+    connection
+        .execute(format!(
+            "CREATE TABLE IF NOT EXISTS bill (
+                id INTEGER PRIMARY KEY,
+                issuer_id INTEGER,
+                issue_date DATE,
+                due_date DATE,
+                amount INTEGER
             )"
         ))
         .unwrap();

@@ -1,5 +1,6 @@
 mod controllers;
 mod db;
+mod utils;
 
 use clap::{Parser, Subcommand};
 
@@ -30,6 +31,7 @@ enum Command {
         #[command(subcommand)]
         entity: Entity,
     },
+    SplitBill,
 }
 
 #[derive(Subcommand)]
@@ -43,7 +45,7 @@ fn main() {
     let connection = db::get_connection("db.sqlite");
 
     // db::drop_tables(&connection);
-    // db::create_tables(&connection);
+    db::create_tables(&connection);
 
     match args.command {
         Command::Add { entity } => match entity {
@@ -62,5 +64,6 @@ fn main() {
             Entity::Bill => bills::rm(&connection),
             Entity::Issuer => issuers::rm(&connection),
         },
+        Command::SplitBill => utils::split_bill(connection),
     }
 }
