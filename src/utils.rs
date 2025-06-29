@@ -27,16 +27,8 @@ impl Display for BillOption {
 
 #[derive(serde::Deserialize)]
 struct StatementRow {
-    #[serde(rename = "Transaction Date")]
-    transaction_date: String,
-    #[serde(rename = "Posted Date")]
-    posted_date: String,
-    #[serde(rename = "Card No.")]
-    card_no: i64,
     #[serde(rename = "Category")]
     category: String,
-    #[serde(rename = "Description")]
-    description: String,
     #[serde(rename = "Debit")]
     debit: Option<f64>,
     #[serde(rename = "Credit")]

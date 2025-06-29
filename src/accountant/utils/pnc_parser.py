@@ -48,10 +48,13 @@ def parse_statement(statement: Path):
     text = textract.process(statement, method="pdftotext", layout=True).decode()
     lines = linebreak_p.split(text)
     leading_space_cnt = pd.Series([len(line) - len(line.strip()) for line in lines])
-    leading_space_cnt_percs = leading_space_cnt.apply(lambda x: percentileofscore(leading_space_cnt.values, x))
+    leading_space_cnt_percs = leading_space_cnt.apply(
+        lambda x: percentileofscore(leading_space_cnt.values, x)
+    )
     leading_space_cnt_50thPerc = np.percentile(leading_space_cnt.values, 50.0)
     rows_that_start_in_colIdx1 = pd.Series(leading_space_cnt.index).apply(
-        lambda x: leading_space_cnt_percs[x] >= 90.0 and leading_space_cnt[x] > 3 * leading_space_cnt_50thPerc
+        lambda x: leading_space_cnt_percs[x] >= 90.0
+        and leading_space_cnt[x] > 3 * leading_space_cnt_50thPerc
     )
     rows_that_start_in_colIdx1 = leading_space_cnt[rows_that_start_in_colIdx1].index.tolist()
 
@@ -141,4 +144,6 @@ def parse_statement(statement: Path):
 
 
 def parse_account(account: str):
-    return pd.concat([parse_statement(statement) for statement in Path(f"statements/{account}").glob("*.pdf")]).reset_index()
+    return pd.concat(
+        [parse_statement(statement) for statement in Path(f"statements/{account}").glob("*.pdf")]
+    ).reset_index()

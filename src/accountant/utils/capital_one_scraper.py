@@ -38,7 +38,9 @@ def download(page: Page):
     # page.locator('[formcontrolname="byStatementSelector"]').click()
     # page.get_by_text("Statment Ending October 18, 2024").click()
 
-    statement = page.locator('[formcontrolname="byStatementSelector"]').inner_text().split("Ending ")[1]
+    statement = (
+        page.locator('[formcontrolname="byStatementSelector"]').inner_text().split("Ending ")[1]
+    )
 
     statement = datetime.strptime(statement, "%B %d, %Y")
 
